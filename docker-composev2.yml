@@ -34,7 +34,7 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix
       POSTGRES_DATABASE: zabbix
-      ZBX_SERVER_NAME: ZabbixDocker
+      ZBX_SERVER_NAME: sb-virtualbox
     depends_on:
       - pgsql-zabbix
     networks:
