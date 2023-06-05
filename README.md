@@ -1,5 +1,5 @@
 # ZDC
-Install and Config Zabbix on Docker
+Install and Config Zabbix on Docker with Ubuntu 20
 
 05.06.2023
 Build in running, but another app not start...works 
