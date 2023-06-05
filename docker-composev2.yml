@@ -2,6 +2,8 @@ version: '3'
 services:
   pgsql-zabbix:
     image: postgres:15-alpine
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix
@@ -28,7 +30,7 @@ services:
   zabbix-web:
     image: zabbix/zabbix-web-nginx-pgsql:6.4-alpine-latest
     ports:
-      - "80:80"
+      - "80:8080"
     environment:
       DB_SERVER_HOST: pgsql-zabbix
       POSTGRES_USER: zabbix
