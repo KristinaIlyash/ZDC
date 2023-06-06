@@ -5,18 +5,18 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: zabbix
-      POSTGRES_PASSWORD: zabbix
-      POSTGRES_DATABASE: zabbix
+      POSTGRES_USER: zabbix, alerta
+      POSTGRES_PASSWORD: zabbix, alerta
+      POSTGRES_DATABASE: zabbix, alerta
     volumes:
-      - ./pgsql:/var/lib/mysql
+      - ./pgsql:/var/lib/pgsql
     networks:
       - zabbix-network
 
   zabbix-server:
     image: zabbix/zabbix-server-pgsql:6.4-alpine-latest
     ports:
-      - "10051:10051"
+      - "10050-10051:10050-10051"
     environment:
       DB_SERVER_HOST: pgsql-zabbix
       POSTGRES_USER: zabbix
@@ -60,6 +60,26 @@ services:
     networks:
       - zabbix-network
     stop_grace_period: 30s
+  
+  alerta:
+    image: alerta/alerta-web:latest
+    # volumes:
+      # - $PWD/config/config.json:/web/config.json
+    ports:
+      - 80:8081
+    depends_on:
+      - pgsql-zabbix
+    environment:
+      # - DEBUG=1  # remove this line to turn DEBUG off
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/alerta
+      - AUTH_REQUIRED=True
+      - ADMIN_PASSWORD=alerta # default is "alerta"
+      - ADMIN_USERS=admin@alerta.io
+      - PLUGINS=reject,blackout,zabbix
+      - INSTALL_PLUGINS=zabbix
+      - ZABBIX_API_URL=http://zabbix-web
+    networks:
+      - zabbix-network
 
 networks:
   zabbix-network:
